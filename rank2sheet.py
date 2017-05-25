@@ -13,7 +13,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 # python library, google api setup, spread sheet 
 
 # get search keyword ranks
-keywords = ["ニュース","自動車保険", "英会話", "ネット証券"]
+keywords = ["news","car", "english", "stock"]
 
 # write spreadsheet 
 G_SHEET_ID = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
