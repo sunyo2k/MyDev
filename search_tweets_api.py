@@ -118,10 +118,8 @@ def get_search_tweets(qry):
         printlog("get 1st auth error")
         return None
     # request
-    #remain_check_wait(auth)
     response = requests.get(url, auth = auth)
     respon_cnt += 1
-    #remain_cnt = int(response.headers['x-rate-limit-remaining'])
     data = response.json()['statuses']
     remain_cnt = wait_n_get_remain()
     printlog("api remaining {0}, response:{1}th, {2}".format(remain_cnt, respon_cnt, url))
@@ -154,10 +152,8 @@ def get_search_tweets(qry):
         if (not auth):
             printlog("get {0}th auth error".format(respon_cnt))
             return None
-        #remain_check_wait(auth)        
         response = requests.get(url, auth = auth)
         respon_cnt += 1
-        #remain_cnt = int(response.headers['x-rate-limit-remaining'])
         data = response.json()['statuses']
         remain_cnt = wait_n_get_remain()
         printlog("api remaining {0}, response:{1}th, {2}".format(remain_cnt, respon_cnt, url))
