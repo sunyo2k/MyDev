@@ -6,7 +6,7 @@ version:
     prototype
 data location:
 ├── log
-│   └── search_tweets_api_201803.log
+│   └── search_tweets_api_201803.log
 └── out
     └── search_tweets_api_20180320.csv
 system prerequisites:
@@ -31,14 +31,13 @@ import csv
 import argparse
 import time
 
-#EXE_DIR = "/home/user/hottweet/batch/"
-EXE_DIR = ""
+#EXE_DIR = "/home/userid/python/batch/"
+EXE_DIR = "/"
 DATE_NOW = datetime.now()
 DATE_DAY = DATE_NOW.strftime('%Y%m%d')
 DATE_MONTH = DATE_NOW.strftime('%Y%m')
 LOG_FILENAME = EXE_DIR + "log/search_tweets_api_" + DATE_MONTH + ".log"
 CSV_FILENAME = EXE_DIR + "out/search_tweets_api_" + DATE_DAY + ".csv"
-JSON_FILENAME = EXE_DIR + "out/search_tweets_api_" + DATE_NOW.strftime('%Y%m%d_%H%M%S') + ".json"
 
 # 15分以内に強制終了
 TIME_OUT = 60 * 14
@@ -100,25 +99,6 @@ def write_csvs(data):
     except Exception as e:
         printlog("error write_csvs " + str(e))
 
-def write_json(twdict, query):
-    return 0
-    filename = JSON_FILENAME
-    filename = re.sub(".json$", query + ".json", filename)
-    try:
-        with open(filename, "w") as f:
-            json.dumps(data, f)
-    except Exception as e:
-        printlog("error write_json " + str(e))
-
-def data2dict(twdict):
-    res = []
-    query = twdict.keys()[0]
-    for id, values in twdict[query].items():
-        res.append([query, id, values["id"], values["user"][""], values["user"][""], values["user"][""], values["user"][""], values["user"][""]])
-
-def qry2query(qry):
-    return re.sub(" [a-zA-Z]+:[0-9a-zA-Z].*?$", "", qry)
-
 def get_search_tweets(qry):
     # access_count and tweets_count
     respon_cnt = 0
@@ -146,9 +126,6 @@ def get_search_tweets(qry):
     remain_cnt = wait_n_get_remain()
     printlog("api remaining {0}, response:{1}th, {2}".format(remain_cnt, respon_cnt, url))
     
-    twdict = {}
-    query = qry2query(qry)
-    twdict[query] = {}
     while remain_cnt > 0:
         # response data csv out
         if len(data) == 0:
@@ -166,7 +143,6 @@ def get_search_tweets(qry):
                            qry])
                 tweets_cnt += 1
                 maxid = int(tweet["id_str"]) - 1
-                twdict[query][tweet["id"]] = tweet
             write_csvs(rs)
 
         # get 2nd~ auth and request
@@ -185,8 +161,6 @@ def get_search_tweets(qry):
         data = response.json()['statuses']
         remain_cnt = wait_n_get_remain()
         printlog("api remaining {0}, response:{1}th, {2}".format(remain_cnt, respon_cnt, url))
-    
-    #write_json(rsdict, query)
     
     return tweets_cnt
 #    print("tweets_cnt:" + str(tweets_cnt))    
